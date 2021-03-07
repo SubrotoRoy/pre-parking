@@ -24,7 +24,7 @@ type Services interface {
 func NewKafkaService() *KafkaSvc {
 	w := kafka.NewWriter(kafka.WriterConfig{
 		Brokers: []string{os.Getenv("BROKER")},
-		Topic:   os.Getenv("parking"),
+		Topic:   os.Getenv("TOPIC"),
 	})
 
 	return &KafkaSvc{Writer: w}
@@ -39,7 +39,6 @@ func (k *KafkaSvc) WriteToKafka(ctx context.Context, origin string, message inte
 		log.Println("Error while saving to kafka. ERROR:", err)
 		return err
 	}
-	log.Println("JobString:", string(jsonString))
 
 	header := protocol.Header{
 		Key:   "origin",
@@ -55,5 +54,4 @@ func (k *KafkaSvc) WriteToKafka(ctx context.Context, origin string, message inte
 		return err
 	}
 	return nil
-
 }
